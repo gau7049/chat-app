@@ -1,9 +1,17 @@
 import React from 'react'
+import useLogout from '../../hooks/useLogout.js'
 
 function LogoutButton() {
+  const {loading, logout} = useLogout()
   return (
     <div className='mt-auto'>
-        Logout Button
+        {!loading ? (
+          <button onClick={logout}>
+            Logout
+          </button>
+        ) : (
+          <span className='loading loading-spinner'></span>
+        )}
     </div>
   )
 }

@@ -3,13 +3,9 @@ import User from "../model/user.model.js";
 
 const protectRoute = async (req, res, next) => {
 
-    console.log("entering protectedRoute Components")
-
     try{
 
         const token = req.cookies.jwt; 
-
-        console.log(token);
 
         if(!token){
             return res.status(401).json({ error: "Unauthorized - No Token Provided"});
@@ -30,8 +26,6 @@ const protectRoute = async (req, res, next) => {
         req.user = user;
 
         next(); // noe call sendMessage function after this function.
-
-        console.log("Successfully passed protected Component")
 
     } catch (error) {
         console.log("Error in protected middleware: ", error)

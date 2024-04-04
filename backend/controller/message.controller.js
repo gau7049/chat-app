@@ -1,5 +1,7 @@
 import Conversation from "../model/conversation.model.js"
 import Message from "../model/message.modal.js"
+import { getReceiverSocketId } from "../socket/socket.js";
+import { io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
     console.log("Entering sendMessage component")
@@ -27,15 +29,20 @@ export const sendMessage = async (req, res) => {
         if(newMessage){
             conversation.messages.push(newMessage._id);
         }
-
-        // SOCKET IO FUNCTIONALITY WILL GO HERE
-
+        
         // await conversation.save();
         // await newMessage.save();
-
+        
         // The above two lines can be replaced with the following line:
         // This will run in parallel
         await Promise.all([conversation.save(), newMessage.save()]);
+
+        // SOCKET IO FUNCTIONALITY WILL GO HERE
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            // io.to(<socket_id>).emit() used to send events to specific client
+            io.to(receiverSocketId).emit("newMessage", newMessage)
+        }
 
         res.status(201).json(newMessage);
 
