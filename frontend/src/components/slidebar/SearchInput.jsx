@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import useConversation from '../../zustand/useConversation';
 import useGetConversations from '../../hooks/useGetConversations'
 import toast from 'react-hot-toast'
+import { IoSearchSharp } from 'react-icons/io5'
 
 function SearchInput() {
   const [search, setSearch] = useState("");
@@ -26,12 +27,13 @@ function SearchInput() {
 
   return (
     <form className='flex items-center gap-2' onSubmit={handleSubmit}>
-        <input type="text" placeholder='Search' className='input input-bordered rounded-full' 
-        
+        <input type="text" placeholder='Search' className='input input-bordered rounded-full w-full text-sm sm:text-lg'
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         />
-        <button type='submit' className='btn btn-primary'>Search</button>
+        <button type='submit' className='btn btn-primary p-2 m-0 sm:p-3 bg-sky-500 text-white'>
+        <IoSearchSharp className='w-5 h-5 outline-none' />
+        </button>
     </form>
   )
 }

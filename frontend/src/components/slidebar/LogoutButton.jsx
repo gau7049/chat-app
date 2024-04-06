@@ -4,7 +4,7 @@ import useLogout from '../../hooks/useLogout.js'
 function LogoutButton() {
   const {loading, logout} = useLogout()
   return (
-    <div className='mt-auto'>
+    <div className='mt-[1vmax] '>
         {!loading ? (
           <button onClick={logout}>
             Logout
