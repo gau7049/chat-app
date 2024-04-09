@@ -8,8 +8,8 @@ This is a real-time chat application designed for seamless communication between
 
 - **User Authentication**: Provides login and signup functionality with JWT-based authentication.
   
-- **Real-Time Messaging**: Enables instant messaging between users in real-time.
-
+- **Real-Time Messaging**: Utilizes Socket.io for instant messaging functionality.
+  
 - **Online/Offline Status**: Indicates user presence with green signals.
 
 ## Technologies Used 💻
@@ -17,7 +17,9 @@ This is a real-time chat application designed for seamless communication between
 - **Frontend**: ReactJS, Tailwind CSS with DaisyUI
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Authentication**: JSON Web Tokens (JWT)
+- **Authentication**: JSON Web Tokens (JWT), bcryptjs for securing passwords
+- **Other Packages**: Socket.io for real-time messaging, cookie-parser for handling cookies, Zustand for state management
+
 
 ## Demo 🚀
 
