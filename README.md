@@ -1,10 +1,10 @@
 # Real-Time Chat Application 💬
 
-## Overview
+## Overview 🌐
 
 This is a real-time chat application designed for seamless communication between users. It includes features such as user authentication, real-time messaging, and online/offline status indication.
 
-## Functionality
+## Functionality 🚀
 
 - **User Authentication**: Provides login and signup functionality with JWT-based authentication.
   
@@ -12,7 +12,7 @@ This is a real-time chat application designed for seamless communication between
 
 - **Online/Offline Status**: Indicates user presence with green signals.
 
-## Technologies Used
+## Technologies Used 💻
 
 - **Frontend**: ReactJS, Tailwind CSS with DaisyUI
 - **Backend**: Node.js, Express.js
