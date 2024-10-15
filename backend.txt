@@ -1,0 +1,33 @@
+Command:
+    npm init -y -> package.json file provided for backend and frontend 
+    - Here we're using a common package.json file
+
+Installing for backend before project begin (directory: root):
+    1. express
+    Purpose: express is a minimalist web framework for Node.js. It's used to build APIs or web applications.
+    Use Case: It simplifies handling HTTP requests, routing, middleware integration, and responses.
+    
+    2. dotenv 
+    Purpose: dotenv is used to load environment variables from a .env file into process.env.
+    Use Case: It keeps sensitive information (like database credentials, API keys) secure and separate from your code.
+
+    3. cookie-parser
+    Purpose: cookie-parser helps parse cookies attached to client requests, making it easier to work with them in your app.
+    Use Case: When working with sessions, authentication, or tracking user preferences.
+
+    4. bcryptyjs
+    Purpose: bcryptjs is a library to hash passwords securely. It's used to protect passwords before saving them to the database.
+    Use Case: Password hashing for user authentication
+
+    5. mongoose
+    Purpose: mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It provides schema-based data models for your MongoDB database.
+    Use Case: Managing MongoDB collections with predefined schemas, relationships, and validation.
+
+    6. socket.io
+    Purpose: socket.io is used for real-time, bidirectional communication between web clients and servers.
+    Use Case: Real-time features like chat apps, live notifications, or multiplayer games.
+    
+    7. jsonwebtoken
+    Purpose: jsonwebtoken is used to create and verify JSON Web Tokens (JWTs) for secure authentication and information exchange.
+    Use Case: Token-based authentication for APIs and user sessions.
+

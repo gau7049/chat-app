@@ -35,6 +35,11 @@ body {
 	perspective: 1000px;
 }
 
+.chat-container{
+	overflow-y: scroll;
+	height: 75%;
+}
+
 @keyframes shake {
 	10%,
 	90% {
