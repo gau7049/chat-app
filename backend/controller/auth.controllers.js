@@ -1,6 +1,7 @@
 import User from "../model/user.model.js";
 import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/generateTokens.js";
+import { io } from "../socket/socket.js";
 
 export const signUp = async (req, res) => {
     try {
@@ -91,12 +92,26 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try{
+        const { userId, active } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        // Update user's lastSeen if they're active
+        if (active) {
+            await User.findByIdAndUpdate(userId, { lastSeen: Date.now() });
+            io.emit("userStatusUpdate", {
+                ID: userId,
+                lastSeen: Date.now(),
+            });
+        }
         res.cookie("jwt","",{maxAge: 0});
         res.status(200).json({
             message: "Logged out successfully"
         });
     } catch(error){
-        console.log("Error in login controller", err);
+        console.log("Error in login controller", error);
         res.status(500).json({
             error: "Interbal Server Error"
         })

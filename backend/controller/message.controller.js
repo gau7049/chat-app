@@ -2,6 +2,7 @@ import Conversation from "../model/conversation.model.js"
 import Message from "../model/message.modal.js"
 import { getReceiverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
+import User from "../model/user.model.js";
 
 export const sendMessage = async (req, res) => {
     console.log("Entering sendMessage component")
@@ -36,6 +37,8 @@ export const sendMessage = async (req, res) => {
         // The above two lines can be replaced with the following line:
         // This will run in parallel
         await Promise.all([conversation.save(), newMessage.save()]);
+         // Update sender's lastSeen
+        await User.findByIdAndUpdate(senderId, { lastSeen: Date.now() });
 
         // SOCKET IO FUNCTIONALITY WILL GO HERE
         const receiverSocketId = getReceiverSocketId(receiverId);
@@ -65,9 +68,14 @@ export const getMessage = async (req, res) => {
 
         if(!conversation) return res.status(200).json([]);
 
+        const user = await User.findById(userToChatId).select("lastSeen");
+
         const messages = conversation.messages
 
-        res.status(200).json(messages);
+        res.status(200).json({
+            messages,
+            lastSeen: user?.lastSeen ? user.lastSeen.toISOString() : "offline"
+        });
         
     } catch(error){
         console.log("Error in sendingMessage controller: ", error)

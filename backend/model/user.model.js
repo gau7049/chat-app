@@ -17,12 +17,16 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         required: true,
-        enum: ["male", "female"],
+        enum: ["Male", "Female"],
     },
     profilePic: {
         type: String,
         default: "",
-    }
+    },
+    lastSeen: {
+        type: Date,
+        default: Date.now, // Initialize to the time of account creation
+    },
     // createdAt, updateAt => Member since <createdAt>
 },{ timestamps: true })
 

@@ -7,8 +7,7 @@ import { FaEllipsisV, FaUserEdit, FaPlus, FaUsers } from "react-icons/fa";
 
 function SearchInput() {
   const [search, setSearch] = useState("");
-  const { setSelectedConversation, setDestination } = useConversation();
-  const { conversations } = useGetConversations();
+  const { setSelectedConversation, setDestination, Updatedconversation } = useConversation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropDownRef = useRef(null);
 
@@ -58,7 +57,7 @@ function SearchInput() {
       return toast.error("Search term must be at least 3 characters long");
     }
 
-    const conversation = conversations.find((c) =>
+    const conversation = Updatedconversation.find((c) =>
       c.fullname.toLowerCase().includes(search.toLowerCase())
     );
 

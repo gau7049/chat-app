@@ -3,18 +3,21 @@ import EmojiPicker from 'emoji-picker-react';
 import useSendMessage from '../../hooks/useSendMessage';
 import { BsSend } from 'react-icons/bs';
 import useConversation from '../../zustand/useConversation';
+import { useSocketContext } from '../../context/SocketContext';
 
 function MessageInput() {
 
-  const {selectedConversation, setSelectedConversation, Updatedconversation, setUpdatedConversation} = useConversation();
+  const {selectedConversation, setSelectedConversation, Updatedconversation, setUpdatedConversation } = useConversation();
 
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { loading, sendMessage } = useSendMessage();
   const emojiPickerRef = useRef(null); // Reference for emoji picker
+  const { setLastSeen } = useSocketContext();
 
   useEffect(() => {
     setMessage("");
+    setLastSeen("")
   }, [selectedConversation])
 
    // Close the emoji picker when clicking outside of it
@@ -38,8 +41,16 @@ function MessageInput() {
     const filteredConversations = Updatedconversation.filter(
       (chat) => chat._id !== selectedConversation._id
     );
-    const newConversations = [selectedConversation, ...filteredConversations];
+    setSelectedConversation({
+      ...selectedConversation,
+      lastMessage: message
+    })
+    const newConversations = [{
+      ...selectedConversation,
+      lastMessage: message
+    }, ...filteredConversations];
     setUpdatedConversation(newConversations)
+    setMessage('');
   }
 
   const handleSubmit = async (e) => {
@@ -47,7 +58,6 @@ function MessageInput() {
     if (!message) return;
     await sendMessage(message);
     changeUserList();
-    setMessage('');
   };
 
   const onEmojiClick = (emojiObject) => {

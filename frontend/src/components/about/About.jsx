@@ -36,7 +36,7 @@ const About = ({ back }) => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-500">Gender:</span>
-              <span className="font-medium text-gray-100">Male</span>
+              <span className="font-medium text-gray-100">{selectedConversation.gender}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-500">Last Seen:</span>
