@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     lastSeen: {
         type: Date,
-        default: Date.now, // Initialize to the time of account creation
+        default: null, // Initialize to the time of account creation
     },
     // createdAt, updateAt => Member since <createdAt>
 },{ timestamps: true })

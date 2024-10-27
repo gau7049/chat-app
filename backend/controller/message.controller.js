@@ -3,9 +3,11 @@ import Message from "../model/message.modal.js"
 import { getReceiverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
 import User from "../model/user.model.js";
+import mongoose from "mongoose";
 
 export const sendMessage = async (req, res) => {
-    console.log("Entering sendMessage component")
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try{
         const {message} = req.body;
         const {id: receiverId}= req.params
@@ -13,12 +15,13 @@ export const sendMessage = async (req, res) => {
 
         let conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] },
-        })
+        }).session(session);
 
         if(!conversation){
-            conversation = await Conversation.create({
-                participants: [senderId, receiverId],
-            })
+            conversation = await Conversation.create(
+                [{ participants: [senderId, receiverId] }],
+                { session }
+            );
         }
 
         const newMessage = new Message({
@@ -26,35 +29,41 @@ export const sendMessage = async (req, res) => {
             receiverId,
             message,
         });
-
+        
         if(newMessage){
             conversation.messages.push(newMessage._id);
         }
-        
-        // await conversation.save();
-        // await newMessage.save();
-        
-        // The above two lines can be replaced with the following line:
-        // This will run in parallel
-        await Promise.all([conversation.save(), newMessage.save()]);
-         // Update sender's lastSeen
+         await Promise.all([
+            conversation.save({ session }),
+            newMessage.save({ session }),
+        ]);
+        // Update sender's lastSeen
         await User.findByIdAndUpdate(senderId, { lastSeen: Date.now() });
 
+        // Commit the transaction
+        await session.commitTransaction();
+        session.endSession();
+
         // SOCKET IO FUNCTIONALITY WILL GO HERE
-        const receiverSocketId = getReceiverSocketId(receiverId);
-        if(receiverSocketId){
+        const receiverSocketIds = getReceiverSocketId(receiverId);
+        if(receiverSocketIds?.length > 0){
             // io.to(<socket_id>).emit() used to send events to specific client
-            io.to(receiverSocketId).emit("newMessage", newMessage)
+            receiverSocketIds.forEach((socketId) => {
+                io.to(socketId).emit("newMessage", { newMessage });
+            });
         }
 
         res.status(201).json(newMessage);
 
 
     } catch (error) {
-        console.log("Error in sendingMessage controller: ", error)
-        res.status(500).json({ error: "Internal server error"});
+        await session.abortTransaction();
+        console.error("Error in sendMessage controller: ", error);
+        res.status(500).json({ error: "Internal server error" });
+    } finally {
+        session.endSession();
     }
-    console.log("message sent")
+    console.log("Message sent");
 }
 
 export const getMessage = async (req, res) => {
@@ -74,7 +83,7 @@ export const getMessage = async (req, res) => {
 
         res.status(200).json({
             messages,
-            lastSeen: user?.lastSeen ? user.lastSeen.toISOString() : "offline"
+            lastSeen: user?.lastSeen ? user.lastSeen.toISOString() : null 
         });
         
     } catch(error){

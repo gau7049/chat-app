@@ -1,51 +1,61 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import { useAuthContext } from "./AuthContext";
-import io from "socket.io-client"
+import io from "socket.io-client";
 import { useContext } from "react";
 
 const SocketContext = createContext();
 
 export const useSocketContext = () => {
     return useContext(SocketContext);
-}
+};
 
 export const SocketContextProvider = ({children}) => {
-    console.log("SocketContext")
-    const [socket, setSocket] = useState(null);
+    
+    const socketRef = useRef(null); // Use useRef to persist socket instance
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const {authUser} = useAuthContext();
+    const { authUser } = useAuthContext();
     const [lastSeen, setLastSeen] = useState("");
 
     useEffect(() => {
-        if(authUser){
+        // Only initialize socket if authUser exists and socket is not already connected
+        if (authUser && !socketRef.current) {
             const socket = io("http://localhost:8000", {
-                query:{
-                    userId: authUser._id
-                }
+                query: { userId: authUser._id },
             });
-            setSocket(socket);
+            
+            socketRef.current = socket; // Store socket in ref to persist it across renders
 
-            // socket.on() is used to listen to the events. can be used both on client and server side
             socket.on("getOnlineUsers", (users) => {
-                setOnlineUsers(users)
-            })
+                setOnlineUsers(users);
+            });
 
             socket.on("userStatusUpdate", (data) => {
-                setLastSeen(data?.lastSeen)
+                // console.log("data last seen: ", data);
+                setLastSeen(data?.lastSeen);
             });
 
-            return () => socket.close();
-        } else {
-            if(socket){
-                socket.close();
-                setSocket(null);
-            }
+            // Clean up socket on component unmount
+            return () => {
+                socketRef.current.close();
+                socketRef.current = null;
+            };
         }
-    },[authUser])
+
+        // If user logs out, close socket connection
+        if (!authUser && socketRef.current) {
+            socketRef.current.close();
+            socketRef.current = null;
+        }
+    }, [authUser]);
 
     return (
-        <SocketContext.Provider value={{socket, onlineUsers, lastSeen, setLastSeen}}>
+        <SocketContext.Provider value={{
+            socket: socketRef.current, 
+            onlineUsers, 
+            lastSeen, 
+            setLastSeen
+        }}>
             {children}
         </SocketContext.Provider>
-    )
-}
+    );
+};

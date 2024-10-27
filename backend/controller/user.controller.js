@@ -26,11 +26,18 @@ export const getUserForSidebar = async (req, res) => {
         return {
           ...user,
           lastMessage: lastMessage ? lastMessage.message : null,
+          lastMessageTime: lastMessage ? lastMessage.createdAt : null,
         };
       })
     );
 
-    res.status(200).json(userConversations);
+     const sortedUserConversations = userConversations.sort((a, b) => {
+      if (!a.lastMessageTime) return 1; // If no message, push user to the end
+      if (!b.lastMessageTime) return -1;
+      return new Date(b.lastMessageTime) - new Date(a.lastMessageTime); // Sort by most recent first
+    });
+
+    res.status(200).json(sortedUserConversations);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

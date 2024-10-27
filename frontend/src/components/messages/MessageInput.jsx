@@ -7,7 +7,7 @@ import { useSocketContext } from '../../context/SocketContext';
 
 function MessageInput() {
 
-  const {selectedConversation, setSelectedConversation, Updatedconversation, setUpdatedConversation } = useConversation();
+  const { selectedConversation, setSelectedConversation, Updatedconversation, setUpdatedConversation } = useConversation();
 
   const [message, setMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -37,17 +37,20 @@ function MessageInput() {
     };
   }, [emojiPickerRef]);
 
-  const changeUserList = () => {
+  const changeUserList = (lastMessage) => {
     const filteredConversations = Updatedconversation.filter(
       (chat) => chat._id !== selectedConversation._id
     );
+    // console.log("message1: ", lastMessage)
     setSelectedConversation({
       ...selectedConversation,
-      lastMessage: message
+      lastMessage: message,
+      lastMessageTime: lastMessage.createdAt
     })
     const newConversations = [{
       ...selectedConversation,
-      lastMessage: message
+      lastMessage: message,
+      lastMessageTime: lastMessage.createdAt
     }, ...filteredConversations];
     setUpdatedConversation(newConversations)
     setMessage('');
@@ -56,8 +59,8 @@ function MessageInput() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!message) return;
-    await sendMessage(message);
-    changeUserList();
+    const lastMessage = await sendMessage(message);
+    changeUserList(lastMessage);
   };
 
   const onEmojiClick = (emojiObject) => {

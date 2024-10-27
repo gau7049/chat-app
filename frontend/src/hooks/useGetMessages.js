@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
 import { useSocketContext } from '../context/SocketContext'
 
 function useGetMessages() {
     const [loading, setLoading] = useState(false)
-    const {messages, setMessages, selectedConversation} = useConversation()
+    const { setMessages, selectedConversation } = useConversation()
     const { setLastSeen } = useSocketContext();
 
     useEffect(() => {
@@ -24,9 +24,9 @@ function useGetMessages() {
             }
         }
         if(selectedConversation?._id) getMessages();
-    },[selectedConversation?._id, setMessages]);
+    },[selectedConversation?._id]);
 
-    return {messages, loading}
+    return {loading}
 }
 
 export default useGetMessages
