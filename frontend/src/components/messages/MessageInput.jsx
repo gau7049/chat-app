@@ -42,7 +42,6 @@ function MessageInput() {
     const filteredConversations = Updatedconversation.filter(
       (chat) => chat._id !== selectedConversation._id
     );
-    // console.log("message1: ", lastMessage)
     setSelectedConversation({
       ...selectedConversation,
       lastMessage: message,

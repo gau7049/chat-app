@@ -3,7 +3,6 @@ import useConversation from "../../zustand/useConversation";
 
 const About = ({ back }) => {
   const { selectedConversation } = useConversation();
-  console.log("selectedConversation: ", selectedConversation);
   return (
     <>
       <div className="p-6 w-full h-full bg-gray-900 text-white flex items-center justify-center">

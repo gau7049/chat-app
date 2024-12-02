@@ -21,8 +21,6 @@ const EditOwnData = ({ back }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save data logic here
-    console.log("Data saved");
   };
 
   return (

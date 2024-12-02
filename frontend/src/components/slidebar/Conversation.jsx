@@ -22,7 +22,6 @@ function Conversation({ conversation, lastIdx, emoji }) {
       const filteredConversations = Updatedconversation?.filter(
         (chat) => chat._id !== conversation._id
       );
-      // console.log("selected");
       const updatedConversation = {
         ...conversation,
         unreadCount: 0

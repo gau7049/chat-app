@@ -46,7 +46,6 @@ const useListenMessages = () => {
   useEffect(() => {
     const handleNewMessage = ({ newMessage }) => {
       if (!newMessage) return;
-      console.log("newMessage: ", newMessage);
       const { senderId } = newMessage;
       if (selectedConversation?._id === senderId) {
         newMessage.shouldShake = true;
