@@ -15,8 +15,12 @@ function useGetMessages() {
                 const res = await fetch(`/api/messages/${selectedConversation._id}`);
                 const data = await res.json();
                 if(data.error) throw new Error(data.error);
+                if(data?.lastSeen){
+                    setLastSeen(data.lastSeen)
+                } else {
+                    setLastSeen({})
+                }
                 setMessages(data.messages);
-                setLastSeen(data.lastSeen)
             } catch (error){
                 toast.error(error)
             } finally{

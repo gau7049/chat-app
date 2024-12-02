@@ -37,7 +37,7 @@ body {
 
 .chat-container{
 	overflow-y: scroll;
-	height: 75%;
+	height: 68%;
 }
 
 .notification-banner {
@@ -52,6 +52,7 @@ body {
 	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
 	transition: opacity 0.3s ease, transform 0.3s ease;
+	z-index: 10;
   }
   
   .notification-banner .flex {

@@ -10,11 +10,13 @@ export const useSocketContext = () => {
 };
 
 export const SocketContextProvider = ({children}) => {
-    
+   
     const socketRef = useRef(null); // Use useRef to persist socket instance
     const [onlineUsers, setOnlineUsers] = useState([]);
     const { authUser } = useAuthContext();
     const [lastSeen, setLastSeen] = useState("");
+    const [socketLastSeen, setSocketLastSeen] = useState("")
+    
 
     useEffect(() => {
         // Only initialize socket if authUser exists and socket is not already connected
@@ -30,8 +32,7 @@ export const SocketContextProvider = ({children}) => {
             });
 
             socket.on("userStatusUpdate", (data) => {
-                // console.log("data last seen: ", data);
-                setLastSeen(data?.lastSeen);
+                setSocketLastSeen(data)
             });
 
             // Clean up socket on component unmount
@@ -53,7 +54,9 @@ export const SocketContextProvider = ({children}) => {
             socket: socketRef.current, 
             onlineUsers, 
             lastSeen, 
-            setLastSeen
+            setLastSeen,
+            socketLastSeen,
+            setSocketLastSeen
         }}>
             {children}
         </SocketContext.Provider>

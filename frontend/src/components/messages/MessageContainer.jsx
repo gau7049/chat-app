@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Messages from "./Messages";
 import MessageInput from "./MessageInput";
 import useConversation from "../../zustand/useConversation";
@@ -8,8 +8,27 @@ import { formatLastSeen } from "../../utils/formatLastSeen";
 
 function MessageContainer({ info }) {
   const { selectedConversation } = useConversation();
-  const { onlineUsers, lastSeen } = useSocketContext();
+  const {
+    onlineUsers,
+    lastSeen,
+    socketLastSeen,
+    setSocketLastSeen,
+    setLastSeen,
+  } = useSocketContext();
   const isOnline = onlineUsers.includes(selectedConversation?._id);
+
+  useEffect(() => {
+    if (!socketLastSeen) return;
+    if (
+      socketLastSeen &&
+      socketLastSeen?.userID === selectedConversation?._id
+    ) {
+      const date = new Date(socketLastSeen.lastSeen);
+      const isoString = date.toISOString();
+      setLastSeen(isoString);
+    }
+    setSocketLastSeen("");
+  }, [socketLastSeen]);
 
   return (
     <div className="sm:w-[70%] flex flex-col w-screen">
@@ -26,14 +45,16 @@ function MessageContainer({ info }) {
                 className="rounded-full h-10 w-10 mr-2"
               />
               <div>
-                <span className="font-bold text-white cursor-pointer" onClick={info}>
+                <span
+                  className="font-bold text-white cursor-pointer"
+                  onClick={info}
+                >
                   {selectedConversation.fullname}
                 </span>
                 <div className="text-sm text-gray-300">
                   {
-                  isOnline ? "Active" :
-                    formatLastSeen(lastSeen)
-                }
+                    lastSeen ? (isOnline ? "Active" : formatLastSeen(lastSeen)) : "Loading.."
+                  }
                 </div>
               </div>
             </div>

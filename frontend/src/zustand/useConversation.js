@@ -9,6 +9,10 @@ const useConversation = create((set) => ({
     setDestination: (destination) => set({destination}),
     messages: [],
     setMessages: (messages) => set({messages}),
+    activeOnly: null,
+    setActiveOnly: (activeOnly) => set({activeOnly}),
+    totalActiveUser: null,
+    setTotalActiveUser: (totalActiveUser) => set({totalActiveUser}),
 }))
 
 export default useConversation;

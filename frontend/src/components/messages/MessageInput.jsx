@@ -38,6 +38,7 @@ function MessageInput() {
   }, [emojiPickerRef]);
 
   const changeUserList = (lastMessage) => {
+    if(!lastMessage) return ;
     const filteredConversations = Updatedconversation.filter(
       (chat) => chat._id !== selectedConversation._id
     );
@@ -45,12 +46,12 @@ function MessageInput() {
     setSelectedConversation({
       ...selectedConversation,
       lastMessage: message,
-      lastMessageTime: lastMessage.createdAt
+      lastMessageTime: lastMessage?.createdAt
     })
     const newConversations = [{
       ...selectedConversation,
       lastMessage: message,
-      lastMessageTime: lastMessage.createdAt
+      lastMessageTime: lastMessage?.createdAt
     }, ...filteredConversations];
     setUpdatedConversation(newConversations)
     setMessage('');

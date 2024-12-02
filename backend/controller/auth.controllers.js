@@ -92,20 +92,6 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try{
-        const { userId, active } = req.body;
-
-        if (!userId) {
-            return res.status(400).json({ error: "User ID is required" });
-        }
-
-        // Update user's lastSeen if they're active
-        if (active) {
-            await User.findByIdAndUpdate(userId, { lastSeen: Date.now() });
-            io.emit("userStatusUpdate", {
-                ID: userId,
-                lastSeen: Date.now(),
-            });
-        }
         res.cookie("jwt","",{maxAge: 0});
         res.status(200).json({
             message: "Logged out successfully"

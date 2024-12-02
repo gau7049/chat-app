@@ -1,14 +1,11 @@
 export function formatLastSeen(date, type = "") {
-    // console.log("date: ", date)
     if(!date){
         return type ? "" : "Inactive";
     } 
+    if(typeof date === 'object') return "No updates";
     const now = new Date();
     const dateDate = new Date(date);
-
-    // Check if the last seen is within the last 24 hours
     const hoursDiff = Math.abs(now - dateDate) / 36e5;
-
     if (hoursDiff < 24) {
         // Format to "hour:minute AM/PM"
         const options = {

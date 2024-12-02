@@ -20,9 +20,13 @@ const useSendMessage =() => {
             const data = await res.json()
 
             if(data.error) throw new Error(data.error)
-
-            setMessages([...messages, data])
-
+                if(messages?.length > 0){
+                    setMessages([...messages, data])
+                } else {
+                    const Localmessages = [];
+                    Localmessages.push(data);
+                    setMessages(Localmessages)
+                }
             return data;
             
         } catch (error) {

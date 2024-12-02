@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import User from "../model/user.model.js";
 
 const app = express();
 
@@ -44,6 +45,19 @@ io.on("connection", (socket) => {
         delete userSocketMap[userId]; // No active connections for the user
       }
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
+      io.emit("userStatusUpdate", {
+        // ID: Object.keys(userSocketMap),
+        lastSeen: Date.now(),
+        userID: userId
+    });
+     // Update lastSeen timestamp in the database
+     User.findByIdAndUpdate(userId, { lastSeen: Date.now() })
+     .then(() => {
+       console.log("Last seen updated for user:", userId);
+     })
+     .catch((error) => {
+       console.error("Error updating last seen:", error);
+     });
     }
   });
 });

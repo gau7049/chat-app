@@ -7,7 +7,7 @@ import { FaEllipsisV, FaUserEdit, FaPlus, FaUsers } from "react-icons/fa";
 
 function SearchInput() {
   const [search, setSearch] = useState("");
-  const { setSelectedConversation, setDestination, Updatedconversation } = useConversation();
+  const { setSelectedConversation, setDestination, Updatedconversation, activeOnly, setActiveOnly, totalActiveUser } = useConversation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropDownRef = useRef(null);
 
@@ -81,6 +81,7 @@ function SearchInput() {
   };
 
   return (
+    <>
     <div className="relative flex items-center justify-between gap-2 p-2 bg-gray-900 rounded-lg">
       <form className="flex items-center gap-2 w-full" onSubmit={handleSubmit}>
         <input
@@ -103,7 +104,7 @@ function SearchInput() {
         <FaEllipsisV
           className="w-6 h-6 cursor-pointer text-gray-400 hover:text-gray-200 transition"
           onClick={toggleDropdown}
-        />
+          />
 
         {dropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-10" ref={dropDownRef}>
@@ -111,7 +112,7 @@ function SearchInput() {
               <li
                 className="hover:bg-gray-700 px-4 py-2 cursor-pointer flex items-center transition duration-200"
                 onClick={updateData}
-              >
+                >
                 <FaUserEdit className="mr-2" /> Update DP/Status/Bio
               </li>
               <li className="hover:bg-gray-700 px-4 py-2 cursor-pointer flex items-center transition duration-200" onClick={shareLink}>
@@ -125,6 +126,22 @@ function SearchInput() {
         )}
       </div>
     </div>
+       {/* Checkbox for Active Users */}
+       <div className="flex justify-between items-center mt-2">
+        <div>
+        <input
+          type="checkbox"
+          id="activeOnly"
+          className="mr-2"
+          checked={activeOnly}
+          onChange={(e) => setActiveOnly(e.target.checked)}
+          />
+        <label htmlFor="activeOnly" className="text-gray-200">
+          Active Users {activeOnly && `(${totalActiveUser})`}
+        </label>
+          </div>
+      </div>
+          </>
   );
 }
 

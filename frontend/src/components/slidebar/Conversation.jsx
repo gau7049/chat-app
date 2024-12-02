@@ -18,7 +18,6 @@ function Conversation({ conversation, lastIdx, emoji }) {
     text.length > length ? `${text.slice(0, length)}...` : text;
 
   const handleClickOnConversation = () => {
-    console.log("this function fires ??")
     if(conversation?.unreadCount > 0){
       const filteredConversations = Updatedconversation?.filter(
         (chat) => chat._id !== conversation._id
@@ -41,25 +40,23 @@ function Conversation({ conversation, lastIdx, emoji }) {
   return (
     <>
       <div
-        className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-2 cursor-pointer ${
-          isSelected ? "bg-sky-500" : ""
-        }`}
-        onClick={() => handleClickOnConversation()}
+        className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-2 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
+        onClick={handleClickOnConversation}
       >
         <div className={`avatar ${isOnline ? "online" : ""}`}>
-          <div className='w-12 rounded-full'>
-            <img src={conversation.profilePic} alt='user avatar' />
+          <div className="w-12 rounded-full">
+            <img src={conversation.profilePic} alt="user avatar" />
           </div>
         </div>
-        <div className='flex flex-col flex-1 relative'>
-          <div className='flex gap-3 justify-between'>
-            <p className={`font-bold ${hasUnreadMessages ? 'text-white' : 'text-gray-200'}`}>
+        <div className="flex flex-col flex-1 relative">
+          <div className="flex gap-3 justify-between">
+            <p className={`font-bold ${hasUnreadMessages ? "text-white" : "text-gray-200"}`}>
               {truncateText(conversation.fullname)}
             </p>
-            <span className='text-xs'>{lastMessageDate}</span>
+            <span className="text-xs">{lastMessageDate}</span>
           </div>
           {/* Last Message Preview */}
-          <p className={`text-sm truncate ${hasUnreadMessages ? 'font-semibold text-white' : 'text-gray-300'}`}>
+          <p className={`text-sm truncate ${hasUnreadMessages ? "font-semibold text-white" : "text-gray-300"}`}>
             {truncateText(lastMessage)}
           </p>
           {/* Unread badge at the bottom right */}
@@ -69,7 +66,7 @@ function Conversation({ conversation, lastIdx, emoji }) {
           )}
         </div>
       </div>
-      {!lastIdx && <div className='divider my-0 py-0 h-1'></div>}
+      {!lastIdx && <div className="divider my-0 py-0 h-1"></div>}
     </>
   );
 }

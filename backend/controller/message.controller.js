@@ -17,11 +17,11 @@ export const sendMessage = async (req, res) => {
             participants: { $all: [senderId, receiverId] },
         }).session(session);
 
-        if(!conversation){
-            conversation = await Conversation.create(
-                [{ participants: [senderId, receiverId] }],
-                { session }
-            );
+        if (!conversation) {
+            conversation = new Conversation({
+                participants: [senderId, receiverId]
+            });
+            await conversation.save({ session });
         }
 
         const newMessage = new Message({
@@ -31,6 +31,9 @@ export const sendMessage = async (req, res) => {
         });
         
         if(newMessage){
+            if (!conversation.messages) {
+                conversation.messages = []; // Initialize messages array if undefined
+            }
             conversation.messages.push(newMessage._id);
         }
          await Promise.all([
