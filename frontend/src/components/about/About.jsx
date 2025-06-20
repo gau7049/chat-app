@@ -15,7 +15,7 @@ const About = ({ back }) => {
               alt="Profile"
             />
             <div>
-              <h2 className="text-3xl font-bold text-gray-100">
+              <h2 className="text-3xl font-bold text-gray-100 break-all">
                 {selectedConversation?.fullname}
               </h2>
               <p className="text-sm text-gray-400">Software Engineer</p>{" "}

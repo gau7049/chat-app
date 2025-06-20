@@ -4,6 +4,8 @@ import { FaEnvelope } from "react-icons/fa";
 const NotificationBanner = ({ message, preview, onClick, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const truncateText = (text, length = 40) => 
+    text.length > length ? `${text.slice(0, length)}...` : text;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,7 +32,7 @@ const NotificationBanner = ({ message, preview, onClick, onClose }) => {
         </div>
         <div>
           <p className="font-semibold text-lg">{message}</p>
-          {preview && <p className="text-sm text-gray-200 opacity-90">{preview}</p>}
+          {preview && <p className="text-sm text-gray-200 opacity-90">{truncateText(preview)}</p>}
         </div>
       </div>
       <button

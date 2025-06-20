@@ -37,7 +37,6 @@ const useListenMessages = () => {
       // Only play sound if user has interacted
       const sound = new Audio(notificationSound);
       sound.play().catch((error) => {
-        console.log("Play failed:", error);
       });
       lastPlayTime = now;
     }
@@ -72,7 +71,7 @@ const useListenMessages = () => {
         );
         const updatedConversation = {
           ...select,
-          unreadCount: 0
+          new_message: 0
         };
         setSelectedConversation(updatedConversation);
         setUpdatedConversation([updatedConversation, ...filteredConversations]);
@@ -106,7 +105,7 @@ const useListenMessages = () => {
           ...receiverChat,
           lastMessage: message,
           lastMessageTime: createdAt,
-          unreadCount: 1
+          new_message: (receiverChat?.new_message || 0) + 1,
         };
 
         setBannerMessage(
@@ -117,6 +116,9 @@ const useListenMessages = () => {
       }
     }
   };
+  
+  
+  
   return { bannerMessage, handleBannerClick, setBannerMessage, msg };
 };
 

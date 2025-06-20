@@ -9,14 +9,14 @@ function MessageInput() {
 
   const { selectedConversation, setSelectedConversation, Updatedconversation, setUpdatedConversation } = useConversation();
 
-  const [message, setMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { loading, sendMessage } = useSendMessage();
   const emojiPickerRef = useRef(null); // Reference for emoji picker
   const { setLastSeen } = useSocketContext();
 
   useEffect(() => {
-    setMessage("");
+    setInputMessage("");
     setLastSeen("")
   }, [selectedConversation])
 
@@ -44,31 +44,31 @@ function MessageInput() {
     );
     setSelectedConversation({
       ...selectedConversation,
-      lastMessage: message,
+      lastMessage: inputMessage,
       lastMessageTime: lastMessage?.createdAt
     })
     const newConversations = [{
       ...selectedConversation,
-      lastMessage: message,
+      lastMessage: inputMessage,
       lastMessageTime: lastMessage?.createdAt
     }, ...filteredConversations];
     setUpdatedConversation(newConversations)
-    setMessage('');
+    setInputMessage('');
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!message) return;
-    const lastMessage = await sendMessage(message);
+    if (!inputMessage) return;
+    const lastMessage = await sendMessage(inputMessage);
     changeUserList(lastMessage);
   };
 
   const onEmojiClick = (emojiObject) => {
-    setMessage((prevMessage) => prevMessage + emojiObject.emoji);
+    setInputMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
 
   const handleInputChange = (e) => {
-    setMessage(e.target.value);
+    setInputMessage(e.target.value);
   };
 
   return (
@@ -83,9 +83,9 @@ function MessageInput() {
 
         <input
           type='text'
-          className='border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 text-white ps-10'
+          className='border text-sm rounded-lg block w-full p-2.5 me-5 bg-gray-700 border-gray-600 text-white ps-10'
           placeholder='Send a message'
-          value={message}
+          value={inputMessage}
           onChange={handleInputChange} // Handle input changes
         />
 

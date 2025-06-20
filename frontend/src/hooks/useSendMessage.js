@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
+import { useSocketContext } from '../context/SocketContext';
 
 const useSendMessage =() => {
     const [loading, setLoading] = useState(false);
     const {messages, setMessages, selectedConversation} = useConversation();
+    const {seenMessage} = useSocketContext
 
     const sendMessage = async (message) => {
         setLoading(true)

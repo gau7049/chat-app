@@ -16,6 +16,7 @@ export const SocketContextProvider = ({children}) => {
     const { authUser } = useAuthContext();
     const [lastSeen, setLastSeen] = useState("");
     const [socketLastSeen, setSocketLastSeen] = useState("")
+    const [seenMessage, setSeenMessage] = useState("");
     
 
     useEffect(() => {
@@ -29,6 +30,10 @@ export const SocketContextProvider = ({children}) => {
 
             socket.on("getOnlineUsers", (users) => {
                 setOnlineUsers(users);
+            });
+
+            socket.on("status_change", (messageIds) => {
+                setSeenMessage(messageIds)
             });
 
             socket.on("userStatusUpdate", (data) => {
@@ -56,7 +61,8 @@ export const SocketContextProvider = ({children}) => {
             lastSeen, 
             setLastSeen,
             socketLastSeen,
-            setSocketLastSeen
+            setSocketLastSeen,
+            seenMessage
         }}>
             {children}
         </SocketContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Conversation from "./Conversation";
 import useGetConversations from "../../hooks/useGetConversations";
 import { getRandomEmoji } from "../../utils/emojis";
@@ -6,12 +6,13 @@ import useConversation from "../../zustand/useConversation";
 import useListenMessages from "../../hooks/useListenMessages";
 import NotificationBanner from "../notificationBanner/NotificationBanner";
 import { useSocketContext } from "../../context/SocketContext";
+import { BsFillNutFill } from "react-icons/bs";
 
 function Conversations() {
   const { loading } = useGetConversations();
   const { onlineUsers } = useSocketContext();
   const { Updatedconversation, activeOnly, setTotalActiveUser } = useConversation();
-
+  
   const { bannerMessage, handleBannerClick, setBannerMessage, msg } =
     useListenMessages();
 
