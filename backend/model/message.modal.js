@@ -15,7 +15,12 @@ const messageSchema = new mongoose.Schema(
         message: {
             type: String,
             required: true,
-        } 
+        },
+        status: {
+            type: String,
+            enum: ["sent", "delivered", "seen"], // Restrict the status to specific values
+            default: "sent", // Default status is "sent"
+        }, 
     },
     {timestamps: true} // createdAt, updatedAt (helps to get time  of creation and last update)
 )

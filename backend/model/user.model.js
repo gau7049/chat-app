@@ -22,7 +22,16 @@ const userSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default: "",
-    }
+    },
+    lastSeen: {
+        type: Date,
+        default: null, // Initialize to the time of account creation
+    },
+    unreadCount: { 
+        type: Map, // Track unread messages per conversation
+        of: [String], // Number of unread messages per conversation
+        default: {}, // Empty by default
+    },
     // createdAt, updateAt => Member since <createdAt>
 },{ timestamps: true })
 

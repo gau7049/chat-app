@@ -1,10 +1,14 @@
-import React from 'react'
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import useConversation from '../zustand/useConversation';
+import { useAuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const useGetConversations = () => {
     const [loading, setLoading] = useState(false)
-    const [conversations, setConversations] = useState([]);
+    const { setUpdatedConversation} = useConversation();
+    const {setAuthUser}  = useAuthContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getConversations = async () => {
@@ -12,10 +16,13 @@ const useGetConversations = () => {
             try{
                 const res = await fetch('/api/users');
                 const data = await res.json();
-                if(data.error){
+                if(data.error){ // it should redirect to login (need to check)
+                    localStorage.removeItem("chat-user")
+                    setAuthUser(null);
+                    navigate("/login");
                     throw new Error(data.error);
                 }
-                setConversations(data);
+                setUpdatedConversation(data);
             } catch (error){
                 toast.error(error)
             } finally {
@@ -25,7 +32,7 @@ const useGetConversations = () => {
         getConversations();
     }, []);
 
-    return {loading, conversations }
+    return { loading }
 }
 
 export default useGetConversations

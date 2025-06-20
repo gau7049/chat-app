@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
+import { useSocketContext } from '../context/SocketContext'
 
 function useGetMessages() {
     const [loading, setLoading] = useState(false)
-    const {messages, setMessages, selectedConversation} = useConversation()
+    const { setMessages, selectedConversation } = useConversation()
+    const { setLastSeen } = useSocketContext();
 
     useEffect(() => {
         const getMessages = async () => {
@@ -13,7 +15,12 @@ function useGetMessages() {
                 const res = await fetch(`/api/messages/${selectedConversation._id}`);
                 const data = await res.json();
                 if(data.error) throw new Error(data.error);
-                setMessages(data);
+                if(data?.lastSeen){
+                    setLastSeen(data.lastSeen)
+                } else {
+                    setLastSeen({})
+                }
+                setMessages(data.messages);
             } catch (error){
                 toast.error(error)
             } finally{
@@ -21,9 +28,9 @@ function useGetMessages() {
             }
         }
         if(selectedConversation?._id) getMessages();
-    },[selectedConversation?._id, setMessages]);
+    },[selectedConversation?._id]);
 
-    return {messages, loading}
+    return {loading}
 }
 
 export default useGetMessages

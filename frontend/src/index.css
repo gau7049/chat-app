@@ -35,6 +35,62 @@ body {
 	perspective: 1000px;
 }
 
+.chat-container{
+	overflow-y: scroll;
+	height: 68%;
+}
+
+.notification-banner {
+	position: fixed;
+	top: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: linear-gradient(to right, #3b82f6, #2563eb);
+	color: white;
+	padding: 1rem 1.5rem;
+	border-radius: 0.5rem;
+	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+	cursor: pointer;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	z-index: 10;
+  }
+  
+  .notification-banner .flex {
+	display: flex;
+	align-items: center;
+  }
+  
+  .slide-in {
+	animation: slideIn 0.3s ease forwards;
+  }
+  
+  .fade-out {
+	animation: fadeOut 0.3s ease forwards;
+  }
+  
+  @keyframes slideIn {
+	from {
+	  transform: translate(-50%, -20px);
+	  opacity: 0;
+	}
+	to {
+	  transform: translate(-50%, 0);
+	  opacity: 1;
+	}
+  }
+  
+  @keyframes fadeOut {
+	from {
+	  /* transform: translate(-50%, 0); */
+	  opacity: 1;
+	}
+	to {
+	  /* transform: translate(-50%, -10px); */
+	  opacity: 0;
+	}
+  }
+  
+
 @keyframes shake {
 	10%,
 	90% {

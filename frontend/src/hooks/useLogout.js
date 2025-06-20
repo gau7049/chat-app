@@ -4,14 +4,14 @@ import toast from 'react-hot-toast';
 
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    const {setAuthUser} = useAuthContext();
+    const {authUser, setAuthUser} = useAuthContext();
 
     const logout = async () => {
         setLoading(true)
         try{
             const res = await fetch("api/auth/logout", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"}
+                headers: {"Content-Type": "application/json"},
             });
             const data = await res.json()
             if(data.error){
