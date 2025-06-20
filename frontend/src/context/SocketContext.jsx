@@ -22,7 +22,7 @@ export const SocketContextProvider = ({children}) => {
     useEffect(() => {
         // Only initialize socket if authUser exists and socket is not already connected
         if (authUser && !socketRef.current) {
-            const socket = io("http://localhost:8000", {
+            const socket = io("https://chat-app-prod-l3cr.onrender.com", {
                 query: { userId: authUser._id },
             });
             
