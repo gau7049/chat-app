@@ -2,9 +2,11 @@ import React, {useState, useEffect} from 'react';
 import useConversation from '../../zustand/useConversation';
 import { useSocketContext } from '../../context/SocketContext';
 import { formatLastSeen } from '../../utils/formatLastSeen';
+import boyImage from '../../../static/images/boy_img.jpg';
+import girlImage from '../../../static/images/girl_img.jpg'
 
 function Conversation({ conversation, lastIdx }) {
-  const { selectedConversation, Updatedconversation, setSelectedConversation, setUpdatedConversation, toggleMobileUser } = useConversation();
+  const { selectedConversation, Updatedconversation, setSelectedConversation, setUpdatedConversation, toggleMobileUser, typingStatus } = useConversation();
   const { onlineUsers, socket } = useSocketContext();
   const [loginUserId, setLoginUserId] = useState(null);
 
@@ -107,19 +109,20 @@ function Conversation({ conversation, lastIdx }) {
       >
         <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
-            <img src={conversation.gender === "male" ? '../../../static/images/boy_img.jpg' : '../../../static/images/girl_img.jpg'} alt="user avatar" />
+            <img src={conversation.gender === "male" ? boyImage : girlImage} alt="user avatar" />
+            
           </div>
         </div>
         <div className="flex flex-col flex-1 relative">
           <div className="flex gap-3 justify-between">
-            <p className={`font-bold ${hasUnreadMessages ? "font-bold text-white" : "font-semibold"}`}>
+            <p className={`font-bold ${hasUnreadMessages ? "font-bold" : "font-semibold"}`}>
               {truncateText(conversation.fullname)}
             </p>
             <span className="text-xs">{lastMessageDate}</span>
           </div>
           {/* Last Message Preview */}
           <p className={`text-sm truncate ${hasUnreadMessages ? "font-semibold unreadmsg" : ""}`}>
-            {truncateText(lastMessage)}
+            {typingStatus?.senderId === conversation._id ? typingStatus?.text : truncateText(lastMessage)}
           </p>
           {/* Unread badge at the bottom right */}
           {hasUnreadMessages && (

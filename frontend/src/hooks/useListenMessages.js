@@ -47,7 +47,6 @@ const useListenMessages = () => {
       if (!newMessage) return;
       const { senderId } = newMessage;
       if (selectedConversation?._id === senderId) {
-        newMessage.shouldShake = true;
         setMessages([...messages, newMessage]);
       }
       setMsg(newMessage)
