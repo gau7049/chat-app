@@ -12,6 +12,7 @@ const io = new Server(server, {
   cors: {
     origin: ["http://localhost:7049"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -32,8 +33,8 @@ io.on("connection", (socket) => {
     userSocketMap[userId].push(socket.id);
   }
 
-  // io.emit() is used to send events to all the connected clients
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  // io?.emit() is used to send events to all the connected clients
+  io?.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("reset_unread_count", async ({ conversationId, userId }) => {
     const session = await mongoose.startSession();
@@ -56,7 +57,7 @@ io.on("connection", (socket) => {
         { session }
       );
 
-      io.emit("status_change", unreadMessageIds);
+      io?.emit("status_change", unreadMessageIds);
 
       // Step 3: Clear the unreadCount array for this conversation and user
       await User.updateOne(
@@ -84,9 +85,25 @@ io.on("connection", (socket) => {
     activeConversations.set(userId, conversationId);
   });
 
+  // Handle typing event
+  socket.on("typing", ({ recipientId, senderId }) => {
+    const recipientSocket = userSocketMap[recipientId];
+    if (recipientSocket) {
+      io.to(recipientSocket).emit("typing", { senderId });
+    }
+  });
+  
+  // Handle stop_typing event
+  socket.on("stop_typing", ({ recipientId, senderId }) => {
+    const recipientSocket = userSocketMap[recipientId];
+    if (recipientSocket) {
+      io.to(recipientSocket).emit("stop_typing", { senderId });
+    }
+  });
+
   // socket.on() is used to listen to the events. can be used both on client and server side
   // Handle user disconnection
-  socket.on("disconnect", () => {
+  socket.on("disconnect", async () => {
     if (userId) {
       userSocketMap[userId] = userSocketMap[userId].filter(
         (id) => id !== socket.id
@@ -94,14 +111,14 @@ io.on("connection", (socket) => {
       if (userSocketMap[userId].length === 0) {
         delete userSocketMap[userId]; // No active connections for the user
       }
-      io.emit("getOnlineUsers", Object.keys(userSocketMap));
-      io.emit("userStatusUpdate", {
+      io?.emit("getOnlineUsers", Object.keys(userSocketMap));
+      io?.emit("userStatusUpdate", {
         // ID: Object.keys(userSocketMap),
         lastSeen: Date.now(),
         userID: userId,
       });
       // Update lastSeen timestamp in the database
-      User.findByIdAndUpdate(userId, { lastSeen: Date.now() });
+      await User.findByIdAndUpdate(userId, { lastSeen: Date.now() });
       activeConversations.delete(socket.id);
     }
   });

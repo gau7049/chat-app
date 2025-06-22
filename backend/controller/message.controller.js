@@ -53,7 +53,7 @@ import mongoose from "mongoose";
 
 
 //         if(receiverSocketIds?.length > 0){
-//             // io.to(<socket_id>).emit() used to send events to specific client
+//             // io.to(<socket_id>)?.emit() used to send events to specific client
 //             receiverSocketIds.forEach((socketId) => {
 //                 const activeConversation = activeConversations.get(socketId);
         
@@ -66,7 +66,7 @@ import mongoose from "mongoose";
 //                 } else {
 
 //                 }
-//                 io.to(socketId).emit("newMessage", { newMessage });
+//                 io.to(socketId)?.emit("newMessage", { newMessage });
 //             });
 //         } else {
 //               // Increment unread count only if the conversation is NOT open
@@ -145,7 +145,7 @@ import mongoose from "mongoose";
 //                         { $push: { [`unreadCount.${receiverId}`]: newMessage._id.toString() } }
 //                     );
 //                 }
-//                 io.to(socketId).emit("newMessage", { newMessage });
+//                 io.to(socketId)?.emit("newMessage", { newMessage });
 //             }
 //         } else {
 //             // Increment unread count only if the conversation is NOT open
@@ -230,12 +230,12 @@ export const sendMessage = async (req, res) => {
                         { _id: newMessage._id.toString() },
                         { $set: { status: "seen" } }
                       );
-                      io.to(senderIds[0]).emit("status_change", {
+                      io.to(senderIds[0])?.emit("status_change", {
                         messageId: newMessage._id,
                         userId: senderId.toString()
                         });   
                 }
-                io.to(socketId).emit("newMessage", { newMessage });
+                io.to(socketId)?.emit("newMessage", { newMessage });
             }
         } else {
             // Increment unread count only if the conversation is NOT open

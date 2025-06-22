@@ -24,8 +24,8 @@ const EditOwnData = ({ back }) => {
   };
 
   return (
-    <div className="p-4 w-full h-full bg-gray-900 text-white flex items-center justify-center">
-      <div className="max-w-md w-full bg-gray-800 p-6 rounded-lg shadow-lg space-y-4">
+    <div className="p-4 w-full h-full flex items-center justify-center">
+      <div className="max-w-md w-full p-6 rounded-lg shadow-lg space-y-4">
         {/* Profile Section */}
         <div className="flex items-center space-x-3">
           <img
@@ -51,7 +51,7 @@ const EditOwnData = ({ back }) => {
             <label className="text-gray-500 text-sm">Full Name:</label>
             <input
               type="text"
-              className="bg-gray-700 text-gray-100 p-2 text-sm rounded"
+              className="p-2 text-sm rounded"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -61,27 +61,27 @@ const EditOwnData = ({ back }) => {
             <label className="text-gray-500 text-sm">Phone Number:</label>
             <input
               type="tel"
-              className="bg-gray-700 text-gray-100 p-2 text-sm rounded"
+              className="p-2 text-sm rounded"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="text-gray-500 text-sm">Location:</label>
+            <label className="">Location:</label>
             <input
               type="text"
-              className="bg-gray-700 text-gray-100 p-2 text-sm rounded"
+              className="p-2 text-sm rounded"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
 
           <div className="flex justify-between items-center">
-            <label className="text-gray-500 text-sm">Bio:</label>
+            <label className="">Bio:</label>
             <input
               type="text"
-              className="bg-gray-700 text-gray-100 p-2 text-sm rounded"
+              className="p-2 text-sm rounded"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
             />
@@ -90,7 +90,7 @@ const EditOwnData = ({ back }) => {
           <div className="flex justify-between items-center">
             <label className="text-gray-500 text-sm">Status:</label>
             <select
-              className="bg-gray-700 text-gray-100 p-2 text-sm rounded"
+              className="p-2 text-sm rounded"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -103,7 +103,7 @@ const EditOwnData = ({ back }) => {
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all text-sm"
+            className="w-full py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all text-sm"
             onClick={() => setDestination("")}
           >
             Save Changes
@@ -112,7 +112,7 @@ const EditOwnData = ({ back }) => {
 
         {/* Back Button */}
         <button
-          className="w-full py-2 mt-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 transition-all text-sm"
+          className="w-full py-2 mt-3 rounded-lg font-semibold transition-all text-sm"
           onClick={() => setDestination("")}
         >
           Back

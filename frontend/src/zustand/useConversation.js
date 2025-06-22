@@ -13,6 +13,10 @@ const useConversation = create((set) => ({
     setActiveOnly: (activeOnly) => set({activeOnly}),
     totalActiveUser: null,
     setTotalActiveUser: (totalActiveUser) => set({totalActiveUser}),
+    toggleMobileUser: (mobileUser) => set({mobileUser}),
+    mobileUser: true,
+    setTypingStatus: (typingStatus) => set({typingStatus}),
+    typingStatus: ""
 }))
 
 export default useConversation;

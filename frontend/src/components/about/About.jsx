@@ -5,8 +5,8 @@ const About = ({ back }) => {
   const { selectedConversation } = useConversation();
   return (
     <>
-      <div className="p-6 w-full h-full bg-gray-900 text-white flex items-center justify-center">
-        <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-lg space-y-6">
+      <div className="p-6 w-full h-full flex items-center justify-center">
+        <div className="max-w-md w-full p-8 rounded-lg shadow-lg space-y-6">
           {/* Profile Section */}
           <div className="flex items-center space-x-4">
             <img
@@ -47,7 +47,7 @@ const About = ({ back }) => {
           {/* Back Button */}
           <div>
             <button
-              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+              className="w-full py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all"
               onClick={back} // Ensure 'back' is correctly defined elsewhere as a function
             >
               Back to Chat

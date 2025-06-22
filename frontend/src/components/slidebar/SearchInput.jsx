@@ -4,6 +4,7 @@ import useGetConversations from "../../hooks/useGetConversations";
 import toast from "react-hot-toast";
 import { IoSearchSharp } from "react-icons/io5";
 import { FaEllipsisV, FaUserEdit, FaPlus, FaUsers } from "react-icons/fa";
+import LogoutButton from "./LogoutButton.jsx"
 
 function SearchInput() {
   const [search, setSearch] = useState("");
@@ -82,21 +83,15 @@ function SearchInput() {
 
   return (
     <>
-    <div className="relative flex items-center justify-between gap-2 p-2 bg-gray-900 rounded-lg">
-      <form className="flex items-center gap-2 w-full" onSubmit={handleSubmit}>
+    <div className="relative flex items-center justify-between gap-2 py-2 rounded-lg">
+      <form className="flex items-center gap-2 w-full search-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Search"
-          className="input input-bordered bg-gray-800 text-white rounded-full w-full text-sm sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="input input-bordered rounded-full w-full text-sm sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button
-          type="submit"
-          className="p-2 m-0 sm:p-3 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition duration-200"
-        >
-          <IoSearchSharp className="w-5 h-5 outline-none" />
-        </button>
       </form>
 
       {/* User Options Dot */}
@@ -107,36 +102,40 @@ function SearchInput() {
           />
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-10" ref={dropDownRef}>
+          <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-10" ref={dropDownRef}>
             <ul className="py-1 text-sm text-gray-200">
               <li
-                className="hover:bg-gray-700 px-4 py-2 cursor-pointer flex items-center transition duration-200"
+                className="px-4 py-2 cursor-pointer flex items-center transition duration-200"
                 onClick={updateData}
                 >
                 <FaUserEdit className="mr-2" /> Update DP/Status/Bio
               </li>
-              <li className="hover:bg-gray-700 px-4 py-2 cursor-pointer flex items-center transition duration-200" onClick={shareLink}>
+              <li className="px-4 py-2 cursor-pointer flex items-center transition duration-200" onClick={shareLink}>
                 <FaPlus className="mr-2" /> Invite Friend
               </li>
-              <li className="hover:bg-gray-700 px-4 py-2 cursor-pointer flex items-center transition duration-200">
+              <li className="px-4 py-2 cursor-pointer flex items-center transition duration-200">
                 <FaUsers className="mr-2" /> Create Group
               </li>
+              <li className="px-4 py-2 cursor-pointer flex items-center transition duration-200">
+                <LogoutButton />
+              </li>
+
             </ul>
           </div>
         )}
       </div>
     </div>
        {/* Checkbox for Active Users */}
-       <div className="flex justify-between items-center mt-2">
+       <div className="flex justify-between items-center">
         <div>
         <input
           type="checkbox"
           id="activeOnly"
-          className="mr-2"
+          className="mr-2 cursor-pointer"
           checked={activeOnly}
           onChange={(e) => setActiveOnly(e.target.checked)}
           />
-        <label htmlFor="activeOnly" className="text-gray-200">
+        <label htmlFor="activeOnly" className="">
           Active Users {activeOnly && `(${totalActiveUser})`}
         </label>
           </div>
