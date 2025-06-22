@@ -3,8 +3,8 @@ import useConversation from '../../zustand/useConversation';
 import { useSocketContext } from '../../context/SocketContext';
 import { formatLastSeen } from '../../utils/formatLastSeen';
 
-function Conversation({ conversation, lastIdx, emoji }) {
-  const { selectedConversation, Updatedconversation, setSelectedConversation, setUpdatedConversation } = useConversation();
+function Conversation({ conversation, lastIdx }) {
+  const { selectedConversation, Updatedconversation, setSelectedConversation, setUpdatedConversation, toggleMobileUser } = useConversation();
   const { onlineUsers, socket } = useSocketContext();
   const [loginUserId, setLoginUserId] = useState(null);
 
@@ -57,9 +57,11 @@ function Conversation({ conversation, lastIdx, emoji }) {
   // Check if the conversation has unread messages
 
   const handleClickOnConversation = () => {
-    socket.emit("conversation_open", conversation._id);
+    try{
+      toggleMobileUser(false);
+      socket?.emit("conversation_open", conversation._id);
     if (hasUnreadMessages) {
-        socket.emit("reset_unread_count", {
+        socket?.emit("reset_unread_count", {
           conversationId: conversation._id,
           userId: loginUserId,
         });
@@ -76,21 +78,23 @@ function Conversation({ conversation, lastIdx, emoji }) {
         unreadCount: updatedUnreadCount, // Set the updated unread count
         new_message: 0
       };
-  
+      
       // Update the selected conversation
       setSelectedConversation(updatedConversation);
-  
+      
       // Create a new array of conversations by mapping over the old one and replacing the updated conversation
       const NewUpdateConversation = Updatedconversation.map(chat =>
         chat._id === conversation._id ? updatedConversation : chat
       );
-  
+      
       // Update the conversation list state
       setUpdatedConversation(NewUpdateConversation);
     } else {
       // If no unread messages or unread count is 0, just set the selected conversation
       setSelectedConversation(conversation);
     }
+  } catch (error) {
+  }
   };
   
   
@@ -98,23 +102,23 @@ function Conversation({ conversation, lastIdx, emoji }) {
   return (
     <>
       <div
-        className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-2 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
+        className={`flex gap-2 items-cente rounded pe-2 py-2 cursor-pointer user ${isSelected && 'chat-selected'}`}
         onClick={() => handleClickOnConversation()}
       >
         <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
-            <img src={conversation.profilePic} alt="user avatar" />
+            <img src={conversation.gender === "male" ? '../../../static/images/boy_img.jpg' : '../../../static/images/girl_img.jpg'} alt="user avatar" />
           </div>
         </div>
         <div className="flex flex-col flex-1 relative">
           <div className="flex gap-3 justify-between">
-            <p className={`font-bold ${hasUnreadMessages ? "text-white" : "text-gray-200"}`}>
+            <p className={`font-bold ${hasUnreadMessages ? "font-bold text-white" : "font-semibold"}`}>
               {truncateText(conversation.fullname)}
             </p>
             <span className="text-xs">{lastMessageDate}</span>
           </div>
           {/* Last Message Preview */}
-          <p className={`text-sm truncate ${hasUnreadMessages ? "font-semibold text-white" : "text-gray-300"}`}>
+          <p className={`text-sm truncate ${hasUnreadMessages ? "font-semibold unreadmsg" : ""}`}>
             {truncateText(lastMessage)}
           </p>
           {/* Unread badge at the bottom right */}
