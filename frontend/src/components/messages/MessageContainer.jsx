@@ -8,6 +8,8 @@ import EmojiPicker from "emoji-picker-react";
 import useSendMessage from "../../hooks/useSendMessage";
 import { BsSend } from "react-icons/bs";
 import useListenTyping from "../../hooks/useListenTyping";
+import boyImage from "../../../static/images/boy_img.jpg";
+import girlImage from "../../../static/images/girl_img.jpg";
 
 function MessageContainer({ info }) {
   const {
@@ -33,23 +35,6 @@ function MessageContainer({ info }) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { loading, sendMessage } = useSendMessage();
   const emojiPickerRef = useRef(null); // Reference for emoji picker
-
-  let typingTimeout;
-
-  const handleTyping = () => {
-    socket.emit("typing", {
-      senderId: authUser._id,
-      recipientId: selectedConversation._id,
-    });
-
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-      socket.emit("stop_typing", {
-        senderId: authUser._id,
-        recipientId: selectedConversation._id,
-      });
-    }, 3000);
-  };
 
   useEffect(() => {
     if (!socketLastSeen) return;
@@ -122,6 +107,52 @@ function MessageContainer({ info }) {
     setInputMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
 
+  // let typingTimeout;
+
+  // const handleTyping = () => {
+  //   socket.emit("typing", {
+  //     senderId: authUser._id,
+  //     recipientId: selectedConversation._id,
+  //   });
+
+  //   clearTimeout(typingTimeout);
+  //   typingTimeout = setTimeout(() => {
+  //     socket.emit("stop_typing", {
+  //       senderId: authUser._id,
+  //       recipientId: selectedConversation._id,
+  //     });
+  //   }, 3000);
+  // };
+
+  let typingTimeout;
+  let lastTypingTime;
+
+  const TYPING_TIMER_LENGTH = 3000; // Time after which 'stop_typing' is sent
+  const TYPING_DEBOUNCE_INTERVAL = 500; // Delay before sending 'typing' event again
+
+  const handleTyping = () => {
+    const now = Date.now();
+    const timeDiff = now - lastTypingTime;
+
+    if (!lastTypingTime || timeDiff > TYPING_DEBOUNCE_INTERVAL) {
+      socket.emit("typing", {
+        senderId: authUser._id,
+        recipientId: selectedConversation._id,
+      });
+    }
+
+    lastTypingTime = now;
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      socket.emit("stop_typing", {
+        senderId: authUser._id,
+        recipientId: selectedConversation._id,
+      });
+      lastTypingTime = null;
+    }, TYPING_TIMER_LENGTH);
+  };
+
   const handleInputChange = (e) => {
     handleTyping();
     setInputMessage(e.target.value);
@@ -142,9 +173,7 @@ function MessageContainer({ info }) {
             <div className="flex items-center ps-2">
               <img
                 src={
-                  selectedConversation.gender === "male"
-                    ? "../../../static/images/boy_img.jpg"
-                    : "../../../static/images/girl_img.jpg"
+                  selectedConversation.gender === "male" ? boyImage : girlImage
                 }
                 alt={selectedConversation.fullname}
                 className="rounded-full h-10 w-10 mr-2"
@@ -154,8 +183,8 @@ function MessageContainer({ info }) {
                   {selectedConversation.fullname}
                 </span>
                 <div className="text-sm text-gray-500">
-                  {typingStatus
-                    ? typingStatus
+                  {typingStatus?.senderId === selectedConversation._id
+                    ? typingStatus?.text
                     : lastSeen
                     ? isOnline
                       ? "Active"

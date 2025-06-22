@@ -15,9 +15,10 @@ const useListenTyping = () => {
 
   useEffect(() => {
     socket?.on("typing", ({ senderId }) => {
-      if (selectedConversation._id === senderId) {
-        setTypingStatus("typing..");
-      }
+      setTypingStatus({
+        senderId,
+        text: "typing.."
+      });
     });
 
     socket?.on("stop_typing", ({ senderId }) => {
